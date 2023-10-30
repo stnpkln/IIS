@@ -3,9 +3,9 @@
 DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    user_id VARCHAR NOT NULL,
-    group_id VARCHAR NOT NULL,
-    thread_id VARCHAR NOT NULL,
+    user_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    thread_id INTEGER NOT NULL,
     body VARCHAR NOT NULL
 );
 
