@@ -1,0 +1,11 @@
+{
+	"env": {
+		"PORT": 3000,
+		"DB_USER": "root",
+		"DB_PASSWORD": "mameradiiis",
+		"DB_NAME": "iisDb",
+		"DB_PORT": 5432,
+		"DB_HOST": "postgres",
+		"ENVIRONMENT": "DEV"
+	}
+}

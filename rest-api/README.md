@@ -1,4 +1,4 @@
-# IIS
+# IIS - REST API
 
 IIS project - Social Network
 
@@ -9,14 +9,21 @@ npm v9
 
 ## ENV
 
-create the following .env file in /rest-api
+create the following .nodemon.json file in /rest-api
 
 ```
-PORT=3000
-DB_USER=IIS
-DB_PWD=mameRadiIIS2023@
-DB_NAME=IIS
-ENVIRONMENT=DEV
+{
+	"env": {
+		"PORT": 3000,
+		"DB_USER": "root",
+		"DB_PASSWORD": "mameradiiis",
+		"DB_NAME": "iisDb",
+		"DB_PORT": 5432,
+		"DB_HOST": "postgres",
+		"ENVIRONMENT": "DEV"
+	}
+}
+
 ```
 
 ## installing packages
@@ -27,3 +34,7 @@ in /rest-api run `npm i`
 
 to run REST API, cd to /rest-api and run `npm run dev`
 the API will be running on address localhost:3000
+
+```
+
+```

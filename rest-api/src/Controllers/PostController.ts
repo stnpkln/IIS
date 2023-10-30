@@ -1,5 +1,9 @@
 /** source/controllers/posts.ts */
 import { Request, Response, NextFunction } from "express";
+import { Client } from "pg";
+import { dbConfig } from "../config";
+
+const client = new Client(dbConfig);
 
 interface Post {
   userId: Number;
@@ -10,9 +14,19 @@ interface Post {
 
 // getting all posts
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-  return res.status(200).json({
-    message: "you called get posts",
+  client.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
   });
+  const queryString = "SELECT * FROM posts";
+  const result = await client.query({ text: queryString });
+  const rows: Post[] = result.rows;
+  if (rows) {
+    return res.status(200).json({
+      message: "you called get posts",
+      data: rows,
+    });
+  }
 };
 
 // getting a single post

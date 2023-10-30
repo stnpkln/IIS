@@ -1,0 +1,11 @@
+
+-- CREATE TABLE
+DROP TABLE IF EXISTS posts;
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR NOT NULL,
+    group_id VARCHAR NOT NULL,
+    thread_id VARCHAR NOT NULL,
+    body VARCHAR NOT NULL
+);
+
