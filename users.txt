@@ -1,0 +1,15 @@
+user_id = password
+
+Alice = AliceJeBorka
+Bob = BobertJeTlustej1010
+Charlie = kingCharles_1234
+DavidNonAdmin = e99a18c428cb38d5f260853678922e03
+Eve = abcd1234
+Faythe = 123456
+Grace = password
+Heidi = iloveyou
+Ivan = qwerty
+Judy = letmein
+
+PetrAdmin = xbromn00
+DavidAdmin = xskrec00
