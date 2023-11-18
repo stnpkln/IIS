@@ -21,16 +21,16 @@
 			<input type="text" class="form-control" id="username" name="username">
 		</div>
 		<div class="mb-3">
-			<label for="password" class="form-label">Password *</label>
+			<label for="password" class="form-label">Heslo *</label>
 			<input type="password" class="form-control" id="password" name="password" required>
 		</div>
 		<div class="form-check mb-3">
-			<input class="form-check-input" type="checkbox" value="true" id="is_public" required>
+			<input class="form-check-input" type="checkbox" value="true" id="is_public" name="us_public">
 			<label class="form-check-label" for="is_public">
 			  Chci aby můj účet byl veřejný *
 			</label>
 		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Zaregistrovat se</button>
 	</form>
 </div>
 @endsection

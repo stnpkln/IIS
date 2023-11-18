@@ -31,9 +31,9 @@ class LoginController extends Controller
         $user = UserModel::where('email', $email)->first();
         $passwordHash = $user->password;
 
-        \Log::info(json_encode($user));
         if ($user && password_verify($password, $passwordHash)) {
-            $request->session()->put('user', $user);
+            session(['user' => $user->email]);
+            session(['is_admin' => $user->is_admin]);
             return redirect()->route('homepage');
         } else {
             return redirect()->route('login');
@@ -65,5 +65,67 @@ class LoginController extends Controller
         $user->save();
 
         return redirect()->route('login');
+    }
+
+    public function logout()
+    {
+        session()->forget('user');
+        return redirect()->route('homepage');
+    }
+
+    public function profile()
+    {
+        $user = UserModel::where('email', session('user'))->first();
+        return view('profile', ['user' => $user]);
+    }
+
+    public function profilePost(Request $request)
+    {
+        $user = UserModel::where('email', session('user'))->first();
+        $user->first_name = $request->input('first_name') ? $request->input('first_name') : $user->first_name;
+        $user->last_name = $request->input('last_name') ? $request->input('last_name') : $user->last_name;
+        $user->username = $request->input('username') ? $request->input('username') : $user->username;
+        $user->is_public = $request->input('is_public') == "true" ? 1 : 0;
+        $user->save();
+
+        return redirect()->route('homepage');
+    }
+
+    public function users()
+    {
+        $isAdmin = (boolean)session('is_admin');
+        $users = $isAdmin ? $this->listUsersAdmin() : $this->listUsers();
+        return view('users', ['users' => $users, 'isAdmin' => $isAdmin]);
+    }
+
+    private function listUsers()
+    {
+        $users = UserModel::select('id', 'username', 'first_name', 'last_name')->where('is_public', 1)->get();
+        return $users;
+    }
+
+    private function listUsersAdmin()
+    {
+        $users = UserModel::select('id', 'username', 'first_name', 'last_name', 'email', 'is_public')->get();
+        return $users;
+    }
+
+    private function getUser($id)
+    {
+        $user = UserModel::select('id', 'username', 'first_name', 'last_name')->where('id', $id)->first();
+        return $user;
+    }
+
+    private function getUserAdmin($id)
+    {
+        $user = UserModel::select('id', 'username', 'first_name', 'last_name', 'email', 'is_public')->where('id', $id)->first();
+        return $user;
+    }
+
+    public function user($id)
+    {
+        $isAdmin = (boolean)session('is_admin');
+        $user = $isAdmin ? $this->getUserAdmin($id) : $this->getUser($id);
+        return view('user', ['user' => $user, 'isAdmin' => $isAdmin]);
     }
 }
