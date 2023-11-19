@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('email', 255)->unique()->nullable(false);
             $table->string('first_name', 50)->nullable(false);
             $table->string('last_name', 50)->nullable(false);
-            $table->integer('is_public')->nullable(false);
-            $table->integer('is_admin')->nullable(false);
+            $table->string('description', 500)->nullable(true);
+            $table->enum('visibility', ['all', 'registered', 'hidden'])->nullable(false);
+            $table->boolean('is_admin')->nullable(false)->default(false);
         });
     }
 

@@ -35,3 +35,4 @@ Route::post('/profile', [LoginController::class, 'profilePost'])->name('profile.
 // users
 Route::get('/users', [LoginController::class, 'users'])->name('users');
 Route::get('/users/{id}', [LoginController::class, 'user'])->name('user');
+Route::post('/users/delete/{id}', [LoginController::class, 'userDelete'])->name('user.delete');

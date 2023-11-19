@@ -17,15 +17,14 @@
 			<input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
 		</div>
 		<div class="mb-3">
-			<label for="username" class="form-label">Uživatelské jméno</label>
-			<input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}">
+			<label for="description" class="form-label">Bio</label>
+			<textarea type="text" class="form-control" id="description" name="description" maxlength="500"></textarea>
 		</div>
-		<div class="form-check mb-3">
-			<input class="form-check-input" type="checkbox" {{ $user->is_public ? 'checked' : '' }} value="true" id="is_public" name="is_public">
-			<label class="form-check-label" for="is_public">
-			  Veřejný profil
-			</label>
-		</div>
+		<select class="form-select mb-3" name="visibility" required>
+			<option value="all" selected>Profil vidí všichni</option>
+			<option value="registered">Profil vidí pouze registrovaní</option>
+			<option value="hidden">Soukromý profil</option>
+		</select>
 		<button type="submit" class="btn btn-primary">Upravit</button>
 	</form>
 </div>
