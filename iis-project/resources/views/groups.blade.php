@@ -1,15 +1,23 @@
 @extends('layout')
 @section('content')
 <div class="container">
-	<h1>Skupiny</h1>
-	<a href="{{ route('group-create') }}" class="btn btn-primary">Vytvořit skupinu</a>
-	@foreach ($groups as $group)
+	<div class="d-flex justify-content-between">
+		<h1>Skupiny</h1>
+		<div>
+			<a href="{{ route('group.create') }}" class="btn btn-success">Vytvořit skupinu</a>
+		</div>
+	</div>
+	<div class="mt-5">
+		@foreach ($groups as $group)
 		<div class="card mb-3">
 			<div class="card-body">
 				<h5 class="card-title">{{ $group->name }}</h5>
-				<p class="card-text">{{ $group->description }}</p>
+				<div class="pt-3">
+					<a href="{{ route('group', ['id' => $group->id]) }}" class="btn btn-primary">Zobrazit skupinu</a>
+				</div>
 			</div>
 		</div>
-	@endforeach
+		@endforeach
+	</div>
 </div>
 @endsection

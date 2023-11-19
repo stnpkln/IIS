@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserGroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,19 +21,25 @@ Route::get('/', function () {
 })->name('homepage');
 
 // login
-Route::get('/login', [LoginController::class, 'login'])->name('login');
-Route::post('/login', [LoginController::class, 'loginPost'])->name('login.post');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 // register
-Route::get('/register', [LoginController::class, 'register'])->name('register');
-Route::post('/register', [LoginController::class, 'registerPost'])->name('register.post');
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
 
 // profil
-Route::get('/profile', [LoginController::class, 'profile'])->name('profile');
-Route::post('/profile', [LoginController::class, 'profilePost'])->name('profile.post');
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::post('/profile', [UserController::class, 'profilePost'])->name('profile.post');
 
 // users
-Route::get('/users', [LoginController::class, 'users'])->name('users');
-Route::get('/users/{id}', [LoginController::class, 'user'])->name('user');
-Route::post('/users/delete/{id}', [LoginController::class, 'userDelete'])->name('user.delete');
+Route::get('/users', [UserController::class, 'users'])->name('users');
+Route::get('/users/{id}', [UserController::class, 'user'])->name('user');
+Route::post('/users/delete/{id}', [UserController::class, 'userDelete'])->name('user.delete');
+
+// groups
+Route::get('/groups', [UserGroupController::class, 'groups'])->name('groups');
+Route::get('/groups/create', [UserGroupController::class, 'groupCreate'])->name('group.create');
+Route::post('/groups/create', [UserGroupController::class, 'groupCreatePost'])->name('group.create.post');
+Route::get('/groups/{id}', [UserGroupController::class, 'group'])->name('group');
