@@ -21,7 +21,7 @@ class UserController extends Controller
     public function loginPost(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|max:255|email',
             'password' => 'required',
         ]);
 
@@ -29,6 +29,9 @@ class UserController extends Controller
         $password = $request->input('password');
 
         $user = UserModel::where('email', $email)->first();
+        if (!$user) {
+            return redirect()->route('login')->withErrors(['login' => 'Invalid email.']);
+        }
         $passwordHash = $user->password;
 
         if ($user && password_verify($password, $passwordHash)) {
@@ -36,17 +39,18 @@ class UserController extends Controller
             session(['is_admin' => $user->is_admin]);
             return redirect()->route('homepage');
         } else {
-            return redirect()->route('login');
+            return redirect()->route('login')->withErrors(['login' => 'Invalid password.']);
         }
     }
     
     public function registerPost(Request $request) {
         $request->validate([
-            'email' => 'required|email|unique:users',
+            'email' => 'required|max:255|email|unique:users',
             'password' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'visibility' => 'required'
+            'first_name' => 'required|max:50',
+            'last_name' => 'required|max:50',
+            'visibility' => 'required',
+            'description' => 'nullable|max:500'
         ]);
         
         $email = $request->input('email');
@@ -84,7 +88,18 @@ class UserController extends Controller
 
     public function profilePost(Request $request)
     {
+        $request->validate([
+            'first_name' => 'required|max:50',
+            'last_name' => 'required|max:50',
+            'username' => 'required|max:50',
+            'visibility' => 'required',
+            'description' => 'nullable|max:500'
+        ]);
+
         $user = UserModel::where('email', session('user'))->first();
+        if (!$user) {
+            return redirect()->route('login');
+        }
         $user->first_name = $request->input('first_name') ? $request->input('first_name') : $user->first_name;
         $user->last_name = $request->input('last_name') ? $request->input('last_name') : $user->last_name;
         $user->username = $request->input('username') ? $request->input('username') : $user->username;

@@ -1,13 +1,30 @@
 @extends('layout')
 @section('content')
 <div class="container">
-	<h1>Skupina {{ $group->name }}</h1>
+	<div class="d-flex flex-row justify-content-between">
+		<h1>Skupina {{ $group->name }}</h1>
+		@if ($isUserInGroup)
+		<div>
+			<a href="{{ route('group.threads', ['id' => $group->id]) }}" class="btn btn-success">Zobrazit vlákna</a>
+		</div>
+		@elseif ($requestSent)
+		<p>již máte odeslanou žádost</p>
+		@elseif (session('user') !== null)
+		<div>
+			<form method="post" action="{{ route('group.join.request', ['id' => $group->id]) }}">
+				@csrf
+				<button type="submit" class="btn btn-success">Požádat o přístup</button>
+			</form>
+		</div>
+		@endif
+	</div>
 	<div class="card mb-3 d-flex flex-row">
 		<div class="card-body">
 			<p class="card-text">{{ $group->description }}</p>
 		</div>
 	</div>
 
+	@if ($isUserInGroup || (session('user') !== null && $group->visibility === 'registered') || $group->visibility === 'all')
 	<h2>Členové</h2>
 	@foreach ($members as $member)
 	<div class="card mb-3 d-flex flex-row">
@@ -18,5 +35,6 @@
 		</div>
 	</div>
 	@endforeach
+	@endif
 </div>
 @endsection

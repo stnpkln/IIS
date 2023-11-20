@@ -40,6 +40,15 @@ Route::post('/users/delete/{id}', [UserController::class, 'userDelete'])->name('
 
 // groups
 Route::get('/groups', [UserGroupController::class, 'groups'])->name('groups');
+Route::get('/my-groups', [UserGroupController::class, 'myGroups'])->name('groups.me');
+Route::get('/groups/{id}', [UserGroupController::class, 'group'])->name('group');
 Route::get('/groups/create', [UserGroupController::class, 'groupCreate'])->name('group.create');
 Route::post('/groups/create', [UserGroupController::class, 'groupCreatePost'])->name('group.create.post');
-Route::get('/groups/{id}', [UserGroupController::class, 'group'])->name('group');
+// Route::post('/groups/delete/{id}', [UserGroupController::class, 'groupDelete'])->name('group.delete');
+
+Route::get('/groups/threads/{id}', [UserGroupController::class, 'threads'])->name('group.threads');
+
+Route::post('/groups/join-request/{id}', [UserGroupController::class, 'joinRequest'])->name('group.join.request');
+Route::get('/request-list', [UserGroupController::class, 'requestList'])->name('request.list');
+Route::post('/groups/{groupId}/join-approve{userId}', [UserGroupController::class, 'joinApprove'])->name('group.join.approve');
+Route::post('/groups/{groupId}/join-decline{userId}', [UserGroupController::class, 'joinDecline'])->name('group.join.decline');

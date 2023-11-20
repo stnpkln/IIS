@@ -2,12 +2,10 @@
 @section('content')
 <div class="container">
 	<div class="d-flex justify-content-between">
-		<h1>Skupiny</h1>
-		@if (session('user'))
+		<h1>Moje skupiny</h1>
 		<div>
 			<a href="{{ route('group.create') }}" class="btn btn-success">Vytvořit skupinu</a>
 		</div>
-		@endif
 	</div>
 	<div class="mt-5">
 		@foreach ($groups as $group)

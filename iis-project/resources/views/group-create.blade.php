@@ -15,7 +15,7 @@
 		<select class="form-select mb-3" name="visibility" required>
 			<option value="all" selected>členy vidí všichni</option>
 			<option value="registered">členy vidí pouze registrovaní</option>
-			<option value="hidden">členy vidí jen ostatní členové</option>
+			<option value="members">členy vidí jen ostatní členové</option>
 		</select>
 		<button type="submit" class="btn btn-primary">Vytvořit skupinu</button>
 	</form>
