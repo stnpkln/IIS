@@ -75,7 +75,8 @@ class UserGroupController extends Controller
             'group' => $group,
             'members' => $members,
             'isUserInGroup' => $this->isUserInGroup($members),
-            'requestSent' => $requestSent
+            'requestSent' => $requestSent,
+            'isUserMod' => $this->isUserMod($members),
         ]);
     }
 
@@ -89,6 +90,18 @@ class UserGroupController extends Controller
             }
         }
         return $userInGroup;
+    }
+
+    private function isUserMod($members): bool {
+        $userEmail = session('user');
+        $userMod = false;
+        foreach ($members as $member) {
+            if ($member->email === $userEmail && ($member->role === 'owner' || $member->role === 'admin')) {
+                $userMod = true;
+                break;
+            }
+        }
+        return $userMod;
     }
 
 
@@ -175,8 +188,8 @@ class UserGroupController extends Controller
         return redirect()->back();
     }
 
-    public function joinDecline(Request $request, $groupId, $userId) {
-        GroupJoinRequestModel::where('requester_id', $userId)
+    public function kick(Request $request, $groupId, $userId) {
+        GroupMemberModel::where('user_id', $userId)
         ->where('group_id', $groupId)
         ->delete();
         return redirect()->back();

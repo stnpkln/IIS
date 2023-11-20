@@ -44,7 +44,7 @@ Route::get('/my-groups', [UserGroupController::class, 'myGroups'])->name('groups
 Route::get('/groups/{id}', [UserGroupController::class, 'group'])->name('group');
 Route::get('/groups/create', [UserGroupController::class, 'groupCreate'])->name('group.create');
 Route::post('/groups/create', [UserGroupController::class, 'groupCreatePost'])->name('group.create.post');
-// Route::post('/groups/delete/{id}', [UserGroupController::class, 'groupDelete'])->name('group.delete');
+Route::post('/groups/delete/{id}', [UserGroupController::class, 'groupDelete'])->name('group.delete');
 
 Route::get('/groups/threads/{id}', [UserGroupController::class, 'threads'])->name('group.threads');
 
@@ -52,3 +52,4 @@ Route::post('/groups/join-request/{id}', [UserGroupController::class, 'joinReque
 Route::get('/request-list', [UserGroupController::class, 'requestList'])->name('request.list');
 Route::post('/groups/{groupId}/join-approve{userId}', [UserGroupController::class, 'joinApprove'])->name('group.join.approve');
 Route::post('/groups/{groupId}/join-decline{userId}', [UserGroupController::class, 'joinDecline'])->name('group.join.decline');
+Route::post('/groups/{groupId}/kick{userId}', [UserGroupController::class, 'kick'])->name('group.kick');

@@ -13,12 +13,12 @@
 			<input type="text" class="form-control" id="last_name" name="last_name" value="{{ $user->last_name }}">
 		</div>
 		<div class="mb-3">
-			<label for="email" class="form-label">Email</label>
-			<input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
+			<label for="username" class="form-label">Uživatelské jméno</label>
+			<input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}">
 		</div>
 		<div class="mb-3">
 			<label for="description" class="form-label">Bio</label>
-			<textarea type="text" class="form-control" id="description" name="description" maxlength="500"></textarea>
+			<textarea type="text" class="form-control" id="description" name="description" maxlength="500">{{ $user->description }}</textarea>
 		</div>
 		<select class="form-select mb-3" name="visibility" required>
 			<option value="all" selected>Profil vidí všichni</option>

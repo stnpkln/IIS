@@ -28,10 +28,20 @@
 	<h2>Členové</h2>
 	@foreach ($members as $member)
 	<div class="card mb-3 d-flex flex-row">
-		<div class="card-body">
-			<p class="card-text">{{ $member->username }}</p>
-			<p class="card-text">role: {{ $member->role }}</p>
-			<a href="{{ route('user', ['id' => $member->id]) }}" class="btn btn-primary">Zobrazit profil</a>
+		<div class="card-body d-flex flex-row justify-content-between">
+			<div>
+				<p class="card-text">{{ $member->username }}</p>
+				<p class="card-text">role: {{ $member->role }}</p>
+				<a href="{{ route('user', ['id' => $member->id]) }}" class="btn btn-primary">Zobrazit profil</a>
+			</div>
+			@if ($isUserMod && $member->role !== 'owner')
+			<div>
+				<form method="post" action="{{ route('group.kick', ['groupId' => $group->id, 'userId' => $member->id]) }}">
+					@csrf
+					<button type="submit" class="btn btn-danger">Vyhodit ze skupiny</button>
+				</form>
+			</div>
+			@endif
 		</div>
 	</div>
 	@endforeach
