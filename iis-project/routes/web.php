@@ -41,10 +41,12 @@ Route::post('/users/delete/{id}', [UserController::class, 'userDelete'])->name('
 // groups
 Route::get('/groups', [UserGroupController::class, 'groups'])->name('groups');
 Route::get('/my-groups', [UserGroupController::class, 'myGroups'])->name('groups.me');
-Route::get('/groups/{id}', [UserGroupController::class, 'group'])->name('group');
+Route::get('/group/{id}', [UserGroupController::class, 'group'])->name('group');
 Route::get('/groups/create', [UserGroupController::class, 'groupCreate'])->name('group.create');
 Route::post('/groups/create', [UserGroupController::class, 'groupCreatePost'])->name('group.create.post');
-Route::post('/groups/delete/{id}', [UserGroupController::class, 'groupDelete'])->name('group.delete');
+Route::post('/groups/delete/{id}', [UserGroupController::class, 'delete'])->name('group.delete');
+Route::get('/groups/edit/{id}', [UserGroupController::class, 'edit'])->name('group.edit');
+Route::post('/groups/edit/{id}', [UserGroupController::class, 'editPost'])->name('group.edit.post');
 
 Route::get('/groups/threads/{id}', [UserGroupController::class, 'threads'])->name('group.threads');
 
@@ -53,3 +55,4 @@ Route::get('/request-list', [UserGroupController::class, 'requestList'])->name('
 Route::post('/groups/{groupId}/join-approve{userId}', [UserGroupController::class, 'joinApprove'])->name('group.join.approve');
 Route::post('/groups/{groupId}/join-decline{userId}', [UserGroupController::class, 'joinDecline'])->name('group.join.decline');
 Route::post('/groups/{groupId}/kick{userId}', [UserGroupController::class, 'kick'])->name('group.kick');
+Route::post('/groups/{id}/leave', [UserGroupController::class, 'leave'])->name('group.leave');

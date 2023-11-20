@@ -57,7 +57,7 @@ class UserGroupController extends Controller
 
     public function group($id)
     {
-        $group = UserGroupModel::select('description', 'visibility', 'id')->find($id);
+        $group = UserGroupModel::select('description', 'visibility', 'id', 'name')->find($id);
         $members = \DB::table('group_members')
         ->select('group_members.user_id','group_members.role', 'group_members.group_id', 'users.username', 'users.id', 'users.email')
         ->join('users','users.id','=','group_members.user_id')
@@ -71,12 +71,13 @@ class UserGroupController extends Controller
             ->first();
         }
 
+        $userRole = $this->getUserRole($members);
         return view('group', [
             'group' => $group,
             'members' => $members,
             'isUserInGroup' => $this->isUserInGroup($members),
             'requestSent' => $requestSent,
-            'isUserMod' => $this->isUserMod($members),
+            'userRole' => $userRole
         ]);
     }
 
@@ -92,16 +93,15 @@ class UserGroupController extends Controller
         return $userInGroup;
     }
 
-    private function isUserMod($members): bool {
+    private function getUserRole($members): string {
         $userEmail = session('user');
         $userMod = false;
         foreach ($members as $member) {
-            if ($member->email === $userEmail && ($member->role === 'owner' || $member->role === 'admin')) {
-                $userMod = true;
-                break;
+            if ($member->email === $userEmail) {
+                return $member->role;
             }
         }
-        return $userMod;
+        return '';
     }
 
 
@@ -140,12 +140,6 @@ class UserGroupController extends Controller
     }
 
     public function requestList() {
-        // $joinRequests = \DB::table('group_join_requests')
-        // ->select('group_join_requests.requester_id', 'group_join_requests.group_id', 'users.username', 'users.id', 'user_groups.name')
-        // ->join('user_groups', 'group_join_requests.group_id', '=', 'user_groups.id')
-        // ->join('users', 'group_join_requests.requester_id', '=', 'users.id')
-        // ->join('group_members', 'group_join_requests.group_id', '=', 'group_members.group_id')
-        // ->get();
         if (!session('user')) {
             return redirect()->route('login');
         }
@@ -188,10 +182,98 @@ class UserGroupController extends Controller
         return redirect()->back();
     }
 
-    public function kick(Request $request, $groupId, $userId) {
+    public function kick(Request $request, $groupId, $userId) { 
+        if (!$this->canUserKick($groupId, $userId)) {
+            return redirect()->back();
+        }
         GroupMemberModel::where('user_id', $userId)
         ->where('group_id', $groupId)
         ->delete();
         return redirect()->back();
+    }
+
+    private function canUserKick($groupId, $userId) {
+        $userEmail = session('user');
+        if (!$userEmail) {
+            return redirect()->route('login');
+        }
+        $user = UserModel::where('email', $userEmail)->first();
+        $userRole = GroupMemberModel::where('user_id', $user->id)
+        ->where('group_id', $groupId)
+        ->first()->role;
+
+        $userToKickRole = GroupMemberModel::where('user_id', $userId)
+        ->where('group_id', $groupId)
+        ->first()->role;
+        if (($userRole === 'owner' && $userToKickRole !== 'owner')) {
+            return true;
+        }
+        return false;
+    }
+
+    public function leave(Request $request, $groupId) {
+        $userEmail = session('user');
+        if (!$userEmail) {
+            return redirect()->route('login');
+        }
+        $userId = UserModel::where('email', $userEmail)->first()->id;
+        GroupMemberModel::where('user_id', $userId)
+        ->where('group_id', $groupId)
+        ->delete();
+        return redirect()->back();
+    }
+
+    public function edit(Request $request, $id) {
+        if (!session('user')) {
+            return redirect()->route('login');
+        }
+        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
+            return redirect()->route('groups');
+        }
+        $group = UserGroupModel::find($id);
+        return view('group-edit', ['group' => $group]);
+    }
+
+    public function delete(Request $request, $id) {
+        if (!session('user')) {
+            return redirect()->route('login');
+        }
+        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
+            return redirect()->route('groups');
+        }
+        $group = UserGroupModel::find($id)->delete();
+        return redirect()->route('groups');
+    }
+
+    private function isUserOwnerOfGroup($groupId, $userEmail) {
+        $userId = UserModel::where('email', session('user'))->first()->id;
+        $isOwner = GroupMemberModel::where('user_id', $userId)->where('group_id', $groupId)->first()->role === 'owner';
+        return $isOwner;
+    }
+
+    public function editPost(Request $request, $id) {
+        if (!session('user')) {
+            return redirect()->route('login');
+        }
+        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
+            return redirect()->route('groups');
+        }
+        $request->validate([
+            'name' => 'required|max:50',
+            'description' => 'nullable|max:500',
+            'visibility' => 'required'
+        ]);
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+        $visibility = $request->input('visibility');
+        
+        $group = UserGroupModel::find($id);
+        $group->name = $name;
+        $group->description = $description;
+        $group->visibility = $visibility;
+        $group->save();
+
+        return redirect()->route('group', ['id' => $id]);
     }
 }

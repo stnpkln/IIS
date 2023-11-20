@@ -2,10 +2,26 @@
 @section('content')
 <div class="container">
 	<div class="d-flex flex-row justify-content-between">
-		<h1>Skupina {{ $group->name }}</h1>
+		<h1>{{ $group->name }}</h1>
 		@if ($isUserInGroup)
-		<div>
-			<a href="{{ route('group.threads', ['id' => $group->id]) }}" class="btn btn-success">Zobrazit vlákna</a>
+		<div class="d-flex flex-row gap-3">
+			@if ($userRole === 'owner')
+			<form method="post" action="{{ route('group.delete', ['id' => $group->id]) }}">
+				@csrf
+				<button type="submit" class="btn btn-danger">Smazat skupinu</button>
+			</form>
+			<div>
+				<a href="{{ route('group.edit', ['id' => $group->id]) }}" class="btn btn-warning">Upravit Skupinu</a>
+			</div>
+			@else
+			<form method="post" action="{{ route('group.leave', ['id' => $group->id]) }}">
+				@csrf
+				<button type="submit" class="btn btn-danger">Opustit skupinu</button>
+			</form>
+			@endif
+			<div>
+				<a href="{{ route('group.threads', ['id' => $group->id]) }}" class="btn btn-success">Zobrazit vlákna</a>
+			</div>
 		</div>
 		@elseif ($requestSent)
 		<p>již máte odeslanou žádost</p>
@@ -34,7 +50,7 @@
 				<p class="card-text">role: {{ $member->role }}</p>
 				<a href="{{ route('user', ['id' => $member->id]) }}" class="btn btn-primary">Zobrazit profil</a>
 			</div>
-			@if ($isUserMod && $member->role !== 'owner')
+			@if (($userRole === 'owner' && $member->role !== 'owner'))
 			<div>
 				<form method="post" action="{{ route('group.kick', ['groupId' => $group->id, 'userId' => $member->id]) }}">
 					@csrf
