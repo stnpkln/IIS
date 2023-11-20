@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\UserGroupModel;
 use App\Models\GroupMemberModel;
 use App\Models\GroupJoinRequestModel;
+use App\Models\GroupRoleRequestModel;
 use App\Models\UserModel;
 
 class UserGroupController extends Controller
@@ -63,20 +64,27 @@ class UserGroupController extends Controller
         ->join('users','users.id','=','group_members.user_id')
         ->where('group_members.group_id', $id)
         ->get();
-        $requestSent = false;
+        $joinRequestSent = false;
+        $roleRequestSent = false;
         if (session('user') !== null) {
             $user = UserModel::where('email', session('user'))->first();
-            $requestSent = (bool)GroupJoinRequestModel::where('requester_id', $user->id)
+
+            $joinRequestSent = (bool)GroupJoinRequestModel::where('requester_id', $user->id)
+            ->where('group_id', $id)
+            ->first();
+
+            $roleRequestSent = (bool)GroupRoleRequestModel::where('requester_id', $user->id)
             ->where('group_id', $id)
             ->first();
         }
 
-        $userRole = $this->getUserRole($members);
+        $userRole = $this->getUserRoleFromMembers($members);
         return view('group', [
             'group' => $group,
             'members' => $members,
             'isUserInGroup' => $this->isUserInGroup($members),
-            'requestSent' => $requestSent,
+            'joinRequestSent' => $joinRequestSent,
+            'roleRequestSent' => $roleRequestSent,
             'userRole' => $userRole
         ]);
     }
@@ -93,7 +101,7 @@ class UserGroupController extends Controller
         return $userInGroup;
     }
 
-    private function getUserRole($members): string {
+    private function getUserRoleFromMembers($members): string {
         $userEmail = session('user');
         $userMod = false;
         foreach ($members as $member) {
@@ -122,9 +130,7 @@ class UserGroupController extends Controller
     }
 
     public function threads($id) {
-        // todo
-        // groupId
-        // zobrazi thready dane skupiny
+        // todo predelat do kontroleru na thready
     }
 
     public function joinRequest(Request $request, $id) {
@@ -165,16 +171,43 @@ class UserGroupController extends Controller
         ->whereIn('group_join_requests.group_id', $groupsIModIds)
         ->get();
 
-        return view('request-list', ['joinRequests' => $joinRequests]);
+        $roleRequests = \DB::table('group_role_requests')
+        ->select('group_role_requests.requester_id', 'group_role_requests.group_id', 'users.username', 'users.id', 'user_groups.name')
+        ->join('user_groups', 'group_role_requests.group_id', '=', 'user_groups.id')
+        ->join('users', 'group_role_requests.requester_id', '=', 'users.id')
+        ->whereIn('group_role_requests.group_id', $groupsIModIds)
+        ->get();
+
+        return view('request-list', ['joinRequests' => $joinRequests, 'roleRequests' => $roleRequests]);
     }
 
     public function joinApprove(Request $request, $groupId, $userId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'owner') {
+            return redirect()->route('groups');
+        }
         $groupMember = new GroupMemberModel();
         $groupMember->user_id = $userId;
         $groupMember->group_id = $groupId;
         $groupMember->role = 'regular';
         $groupMember->save();
 
+        GroupJoinRequestModel::where('requester_id', $userId)
+        ->where('group_id', $groupId)
+        ->delete();
+
+        return redirect()->back();
+    }
+
+    public function joinDecline(Request $request, $groupId, $userId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'owner') {
+            return redirect()->route('groups');
+        }
         GroupJoinRequestModel::where('requester_id', $userId)
         ->where('group_id', $groupId)
         ->delete();
@@ -224,11 +257,12 @@ class UserGroupController extends Controller
     }
 
     public function edit(Request $request, $id) {
-        if (!session('user')) {
+        if (session('user') === null) {
             return redirect()->route('login');
         }
-        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
-            return redirect()->route('groups');
+        if ($this->getUserRoleInGroup($id, session('user')) !== 'owner') {
+            \Log::info('user is not owner, its: ' . $this->getUserRoleInGroup($id, session('user')));
+            return redirect()->back();
         }
         $group = UserGroupModel::find($id);
         return view('group-edit', ['group' => $group]);
@@ -238,24 +272,23 @@ class UserGroupController extends Controller
         if (!session('user')) {
             return redirect()->route('login');
         }
-        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
+        if ($this->getUserRoleInGroup($id, session('user')) !== 'owner') {
             return redirect()->route('groups');
         }
         $group = UserGroupModel::find($id)->delete();
         return redirect()->route('groups');
     }
 
-    private function isUserOwnerOfGroup($groupId, $userEmail) {
+    private function getUserRoleInGroup($groupId, $userEmail) {
         $userId = UserModel::where('email', session('user'))->first()->id;
-        $isOwner = GroupMemberModel::where('user_id', $userId)->where('group_id', $groupId)->first()->role === 'owner';
-        return $isOwner;
+        return GroupMemberModel::where('user_id', $userId)->where('group_id', $groupId)->first()->role;
     }
 
     public function editPost(Request $request, $id) {
         if (!session('user')) {
             return redirect()->route('login');
         }
-        if (!$this->isUserOwnerOfGroup($id, session('user'))) {
+        if ($this->getUserRoleInGroup($id, session('user')) !== 'owner') {
             return redirect()->route('groups');
         }
         $request->validate([
@@ -275,5 +308,67 @@ class UserGroupController extends Controller
         $group->save();
 
         return redirect()->route('group', ['id' => $id]);
+    }
+
+    public function roleRequest(Request $request, $groupId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'regular') {
+            \Log::info('user is not regular, its: ' . $this->getUserRoleInGroup($groupId, session('user')));
+            return redirect()->route('groups');
+        }
+        $roleRequest = new GroupRoleRequestModel();
+        $roleRequest->requester_id = UserModel::where('email', session('user'))->first()->id;
+        $roleRequest->group_id = $groupId;
+        $roleRequest->save();
+
+        return redirect()->back()->with('success', 'žádost úspěšně odeslána');
+    }
+
+    public function roleApprove(Request $request, $groupId, $userId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'owner') {
+            return redirect()->route('groups');
+        }
+        $groupMember = GroupMemberModel::where('user_id', $userId)
+        ->where('group_id', $groupId)
+        ->update(['role' => 'moderator']);
+
+        GroupRoleRequestModel::where('requester_id', $userId)
+        ->where('group_id', $groupId)
+        ->delete();
+
+        return redirect()->back();
+    }
+
+    public function roleDecline(Request $request, $groupId, $userId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'owner') {
+            return redirect()->route('groups');
+        }
+        GroupRoleRequestModel::where('requester_id', $userId)
+        ->where('group_id', $groupId)
+        ->delete();
+
+        return redirect()->back();
+    }
+
+    public function roleDerank(Request $request, $groupId, $userId) {
+        if (session('user') === null) {
+            return redirect()->route('login');
+        }
+        if ($this->getUserRoleInGroup($groupId, session('user')) !== 'owner') {
+            return redirect()->route('groups');
+        }
+        $groupMember = GroupMemberModel::where('user_id', $userId)
+        ->where('group_id', $groupId)
+        ->update(['role' => 'regular']);
+
+        return redirect()->back();
     }
 }

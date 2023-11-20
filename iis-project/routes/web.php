@@ -56,3 +56,8 @@ Route::post('/groups/{groupId}/join-approve{userId}', [UserGroupController::clas
 Route::post('/groups/{groupId}/join-decline{userId}', [UserGroupController::class, 'joinDecline'])->name('group.join.decline');
 Route::post('/groups/{groupId}/kick{userId}', [UserGroupController::class, 'kick'])->name('group.kick');
 Route::post('/groups/{id}/leave', [UserGroupController::class, 'leave'])->name('group.leave');
+
+Route::post('/groups/role-request/{id}', [UserGroupController::class, 'roleRequest'])->name('group.role.request');
+Route::post('/groups/{groupId}/role-approve{userId}', [UserGroupController::class, 'roleApprove'])->name('group.role.approve');
+Route::post('/groups/{groupId}/role-decline{userId}', [UserGroupController::class, 'roleDecline'])->name('group.role.decline');
+Route::post('/groups/{groupId}/role-derank{userId}', [UserGroupController::class, 'roleDerank'])->name('group.role.derank');

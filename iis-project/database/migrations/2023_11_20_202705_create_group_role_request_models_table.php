@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group_join_requests', function (Blueprint $table) {
+        Schema::create('group_role_requests', function (Blueprint $table) {
             $table->unsignedBigInteger('requester_id');
             $table->unsignedBigInteger('group_id');
             $table->primary(['requester_id', 'group_id']);
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_join_requests');
+        Schema::dropIfExists('group_role_requests');
     }
 };

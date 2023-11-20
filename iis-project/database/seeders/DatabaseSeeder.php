@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'xskrec00@test.cz',
             'visibility' => 'all',
             'is_admin' => false,
-            'description' => 'I am a big fan of IIS. And i love burgers.',
+            'description' => 'I am a big fan of IIS. And i love burgers. And i have a mini-dick. a small little fella. he is sad, because nobody wants to play with him :(',
             'password' => password_hash('heslo123', PASSWORD_BCRYPT),
         ]);
 
