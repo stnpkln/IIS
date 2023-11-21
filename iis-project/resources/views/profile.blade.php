@@ -21,9 +21,9 @@
 			<textarea type="text" class="form-control" id="description" name="description" maxlength="500">{{ $user->description }}</textarea>
 		</div>
 		<select class="form-select mb-3" name="visibility" required>
-			<option value="all" {{ $group->visibility === 'all' ? 'selected' : '' }}>Profil vidí všichni</option>
-			<option value="registered" {{ $group->visibility === 'registered' ? 'selected' : '' }}>Profil vidí pouze registrovaní</option>
-			<option value="hidden" {{ $group->visibility === 'hidden' ? 'selected' : '' }}>Soukromý profil</option>
+			<option value="all" {{ $user->visibility === 'all' ? 'selected' : '' }}>Profil vidí všichni</option>
+			<option value="registered" {{ $user->visibility === 'registered' ? 'selected' : '' }}>Profil vidí pouze registrovaní</option>
+			<option value="hidden" {{ $user->visibility === 'hidden' ? 'selected' : '' }}>Soukromý profil</option>
 		</select>
 		<button type="submit" class="btn btn-primary">Upravit</button>
 	</form>

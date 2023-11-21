@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,5 +67,14 @@ Route::post('/groups/{groupId}/role-derank{userId}', [UserGroupController::class
 Route::get('/threads/{groupId}', [ThreadController::class, 'threads'])->name('threads');
 Route::get('/thread/create/{groupId}', [ThreadController::class, 'threadCreate'])->name('thread.create');
 Route::post('/thread/create/{groupId}', [ThreadController::class, 'threadCreatePost'])->name('thread.create.post');
-Route::get('/thread/{id}', [ThreadController::class, 'thread'])->name('thread');
 Route::post('/thread/delete/{id}', [ThreadController::class, 'delete'])->name('thread.delete');
+
+// posts
+Route::get('/posts/{id}', [PostController::class, 'posts'])->name('posts');
+Route::get('/post/create/{id}', [PostController::class, 'postCreate'])->name('post.create');
+Route::post('/post/create/{id}', [PostController::class, 'postCreatePost'])->name('post.create.post');
+Route::post('/post/delete/{id}', [PostController::class, 'postDelete'])->name('post.delete');
+
+// ratings
+Route::post('/like/{id}', [PostController::class, 'like'])->name('like');
+Route::post('/dislike/{id}', [PostController::class, 'dislike'])->name('dislike');

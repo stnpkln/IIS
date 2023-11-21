@@ -16,7 +16,7 @@
 			<a class="nav-link {{ Request::is('request-list') ? 'active' : '' }}" href="{{ route('request.list') }}">Žádosti</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link {{ Request::is('my-groups') ? 'active' : '' }}" href="{{ route('groups.me') }}">Moje skupiny</a>
+			<a class="nav-link {{ Request::is('my-groups', 'thread*', 'post*') ? 'active' : '' }}" href="{{ route('groups.me') }}">Moje skupiny</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link {{ Request::is('profile') ? 'active' : '' }}" href="{{ route('profile') }}">Profil</a>

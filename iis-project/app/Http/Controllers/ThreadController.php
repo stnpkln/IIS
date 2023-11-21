@@ -15,15 +15,6 @@ class ThreadController extends Controller
         return view('threads', ['threads' => $threads, 'groupId' => $groupId]);
     }
 
-    public function thread($threadId) {
-        if (session('user') === null) {
-            return redirect()->route('login');
-        }
-        $thread = ThreadModel::where('id', $threadId)->first();
-        $userId = $this->getUserId(session('user'));
-        $canDelete = $this->isModerator($thread->group_id, $userId) || $thread->user_id === $userId;
-        return view('thread', ['thread' => $thread, 'canDelete' => $canDelete]);
-    }
 
     public function threadCreate($groupId) {
         return view('thread-create', ['groupId' => $groupId]);
@@ -51,7 +42,7 @@ class ThreadController extends Controller
         $thread->topic = $request->input('topic');
         $thread->save();
 
-        return redirect()->route('thread', ['id' => $thread->id,'groupId' => $groupId]);
+        return redirect()->route('posts', ['id' => $thread->id]);
     }
 
     public function delete(Request $request, $threadId) {
@@ -71,7 +62,7 @@ class ThreadController extends Controller
     }
 
     private function isMember($groupId, $userEmail) {
-        $userId = UserModel::where('email', $userEmail)->first()->id;
+        $userId = $this->getUserId($userEmail);
         if ($userId === null) {
             return false;
         }
@@ -84,7 +75,6 @@ class ThreadController extends Controller
 
     private function isModerator($groupId, $userId) {
         $role = GroupMemberModel::where('group_id', $groupId)->where('user_id', $userId)->first()->role;
-        \Log::info(json_encode($role));
         return ($role === 'moderator' || $role === 'owner');
     }
 }

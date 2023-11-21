@@ -9,7 +9,7 @@
 	</div>
 	<div class="mt-5">
 		@foreach ($threads as $thread)
-		<a href="{{ route('thread', ['id' => $thread->id]) }}">
+		<a href="{{ route('posts', ['id' => $thread->id]) }}">
 			<div class="card mb-3">
 				<div class="card-body">
 					<h5 class="card-title">{{ $thread->topic }}</h5>
