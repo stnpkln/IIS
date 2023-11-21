@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\ThreadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +49,6 @@ Route::post('/groups/delete/{id}', [UserGroupController::class, 'delete'])->name
 Route::get('/groups/edit/{id}', [UserGroupController::class, 'edit'])->name('group.edit');
 Route::post('/groups/edit/{id}', [UserGroupController::class, 'editPost'])->name('group.edit.post');
 
-Route::get('/groups/threads/{id}', [UserGroupController::class, 'threads'])->name('group.threads');
 
 Route::post('/groups/join-request/{id}', [UserGroupController::class, 'joinRequest'])->name('group.join.request');
 Route::get('/request-list', [UserGroupController::class, 'requestList'])->name('request.list');
@@ -61,3 +61,10 @@ Route::post('/groups/role-request/{id}', [UserGroupController::class, 'roleReque
 Route::post('/groups/{groupId}/role-approve{userId}', [UserGroupController::class, 'roleApprove'])->name('group.role.approve');
 Route::post('/groups/{groupId}/role-decline{userId}', [UserGroupController::class, 'roleDecline'])->name('group.role.decline');
 Route::post('/groups/{groupId}/role-derank{userId}', [UserGroupController::class, 'roleDerank'])->name('group.role.derank');
+
+// threads
+Route::get('/threads/{groupId}', [ThreadController::class, 'threads'])->name('threads');
+Route::get('/thread/create/{groupId}', [ThreadController::class, 'threadCreate'])->name('thread.create');
+Route::post('/thread/create/{groupId}', [ThreadController::class, 'threadCreatePost'])->name('thread.create.post');
+Route::get('/thread/{id}', [ThreadController::class, 'thread'])->name('thread');
+Route::post('/thread/delete/{id}', [ThreadController::class, 'delete'])->name('thread.delete');

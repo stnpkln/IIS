@@ -26,7 +26,7 @@
 				@endif
 			@endif
 			<div>
-				<a href="{{ route('group.threads', ['id' => $group->id]) }}" class="btn btn-success">Zobrazit vlákna</a>
+				<a href="{{ route('threads', ['groupId' => $group->id]) }}" class="btn btn-success">Zobrazit vlákna</a>
 			</div>
 		</div>
 		@elseif ($joinRequestSent)
