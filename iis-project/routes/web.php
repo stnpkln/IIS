@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\HomepageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,7 @@ use App\Http\Controllers\PostController;
 */
 
 // homepage
-Route::get('/', function () {
-    return view('homepage');
-})->name('homepage');
+Route::get('/', [HomepageController::class, 'homepage'])->name('homepage');
 
 // login
 Route::get('/login', [UserController::class, 'login'])->name('login');
