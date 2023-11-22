@@ -76,10 +76,11 @@ class PostController extends Controller
         $post = PostModel::where('id', $postId)->first();
         $threadId = $post->thread_id;
         $thread = ThreadModel::where('id', $threadId)->first();
+        $userId = $this->getUserId(session('user'));
         if (session('user') === null) {
             return redirect()->route('login');
         }
-        if (!$this->isModerator($thread->group_id, $this->getUserId(session('user'))) && $post->user_id !== $userId) {
+        if (!$this->isModerator($thread->group_id, $userId) && $post->user_id !== $userId) {
             return redirect()->route('groups');
         }
         $post->delete();
