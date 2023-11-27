@@ -33,19 +33,16 @@
 </dl>
 
 <h2>Uživatelé systému pro testování</h2>
-<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+<p>Výběr z uživatelů, je možné přidat registrací další. Přihlašuje se emailem, až na admina mají všichni heslo: <b>heslo123</b></p>
 <table>
 <tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
 <tr><td>admin@test.cz</td><td>youShallNotPassword</td><td>Administrátor</td></tr>
-<tr><td>TODO</td><td>TODO</td><td>TODO</td></tr>
-<tr><td>TODO</td><td>TODO</td><td>TODO</td></tr>
+<tr><td>xbromn00@test.cz</td><td>heslo123</td><td>vlastník skupiny VUT FIT</td></tr>
+<tr><td>xskrec00@test.cz</td><td>heslo123</td><td>člen skupiny VUT FIT</td></tr>
 </table>
 
-<p>(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p> 
-
 <h3>Video</h3>
-TODO
-<p>Přiložte odkaz na komentované video demostrující použití informačního systému. Zaměřte se na případy užití definované zadáním (např. registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). Video nahrajte například na VUT Google Drive, kde ho bude možné přímo spustit z odkazu.</p> 
+<p><a href="https://drive.google.com/file/d/1Go7jMxSZdrPqkYj6R9eSnQD9JPeQd1w0/view?usp=sharing">Demonstrační video</a></p>
 
 <h2>Implementace</h2>
 <p>Každý route je zpracováván příslušnou funkcí některého z kontrolerů</p>
@@ -75,13 +72,16 @@ Stručně popište:
 <li>Zkopírovat repozitář</li>
 <li>PHP v8.2.12, composer v2.6.5, laravel 10.x </li>
 <li><code>composer install</code> - pro instalaci balíčků</li>
-<li><code>php artisan migrate</code> - pro instalaci zmigrování tabulek</li>
+<li><code>cp .env.example .env</code> - pro vytvoření konfiguračního souboru</li>
+<li>upravit .env soubor - připojení k databázi</li>
+<li><code>php artisan key:generate</code> - pro vygenerování klíče</li>
+<li><code>php artisan migrate</code> - pro zmigrování tabulek</li>
 <li><code>php artisan db:seed</code> - pro vložení testovacích dat</li>
 <li>případně <code>php artisan serve</code> - pro lokální spuštění serveru</li>
 </ul>
 
 <h2>Známé problémy</h2>
-<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>Načítání dat z databáze není optimalizované (některá zpracování jsou pomalejší - např. označování příspěvků které uživatel již hodnotil) a data se načítají celá najednou - není omezeno načítání 10 příspěvků, pak dalších 10... pokud by naše soc. síť měla velké množství dat, narazila by na problémy s rychlostí</p>
 
 </body>
 </html>

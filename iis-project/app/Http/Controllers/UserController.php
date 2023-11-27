@@ -59,7 +59,7 @@ class UserController extends Controller
         $surname = $request->input('last_name');
         $visibility = $request->input('visibility');
         $username = $request->input('username');
-        $description = $request->input('description');
+        $description = $request->input('description') ?? null;
         
         $user = new UserModel();
         $user->email = $email;

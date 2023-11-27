@@ -32,7 +32,7 @@ class UserGroupController extends Controller
         ]);
 
         $name = $request->input('name');
-        $description = $request->input('description');
+        $description = $request->input('description') ?? null;
         $visibility = $request->input('visibility');
         
         $user = UserModel::where('email', session('user'))->first();
