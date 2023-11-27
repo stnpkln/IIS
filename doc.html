@@ -21,12 +21,12 @@
 <dl>
 	<dt>Autoři</dt>
 	<dd>Petr Bromnik <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
-	    <a href="mailto:xautor01@stud.fit.vutbr.cz">xautor01@stud.fit.vutbr.cz</a> -
+	    <a href="mailto:xbromn00@stud.fit.vutbr.cz">xbromn00tud.fit.vutbr.cz</a> -
 		Analýza, návrh, implementace (Laravel, PHP, HTML, bootstrap)
 	</dd>
-	<dd>Druhé jméno <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
-	    <a href="mailto:xautor02@stud.fit.vutbr.cz">xautor02@stud.fit.vutbr.cz</a> - 
-		analýza, návrh, práce s databází (migrace, seedy, modely), Nasazování aplikace, testování
+	<dd>David Skřeček <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xskrec00@stud.fit.vutbr.cz">xskrec00@stud.fit.vutbr.cz</a> - 
+		Analýza, návrh, práce s databází (migrace, seedy, modely), Nasazování aplikace, testování
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd><a href="http://www.stud.fit.vutbr.cz/~xskrec00/">http://www.stud.fit.vutbr.cz/~xskrec00/</a></dd>
@@ -50,7 +50,7 @@ TODO
 <h2>Implementace</h2>
 <p>Každý route je zpracováván příslušnou funkcí některého z kontrolerů</p>
 <p>Funkce kontrolerů pak používají modely a views. Na views byly použity blade templates, stylování bylo primárně za použití bootstrapu</p>
-<p><b>HomepageController</b> - má pouze jedinou funkci. Pokud je uživatel přihlášen, je přesměrován na jeho skupiny. Jinak se mu zobrazí stránka, kde je přivítán a vyzvýn k přihlášení, pokud chce používat rozšířené funkcionality.</p>
+<p><b>HomepageController</b> - má pouze jedinou funkci. Pokud je uživatel přihlášen, je přesměrován na jeho skupiny. Jinak se mu zobrazí stránka, kde je přivítán a vyzván k přihlášení, pokud chce používat rozšířené funkcionality.</p>
 <p>
 	<b>UserController</b> - stará se o funkcionalitu která se týká uživatelů (přihlášní, registrace, odhlášení, zobrazování uživatelů a jejich správa)
 	Přihlašování a registrace je řešena přes PHP funkce (password_verify a password_hash), nikoliv přes nativní funkce Laravelu.
@@ -59,22 +59,25 @@ TODO
 	<b>GroupController</b> - stará se o funkcionality týkající se skupin (zobrazování, vytváření, editace, mazání, přidávání a odebírání uživatelů)
 </p>
 <p>
-	<b>ThreadController</b> - stará se o funkcionality týkající se vláken (zobrazování, vytváření, editace, mazání)
+	<b>ThreadController</b> - stará se o funkcionality týkající se vláken (zobrazování, vytváření, mazání)
 </p>
 <p>
 	<b>PostController</b> - stará se o funkcionality týkající se příspěvků (zobrazování, vytváření, editace, mazání, rating)
 </p>
 <h3>Databáze</h3>
 
-Zde vložte grafické schéma relační databáze (tabulek v databázi).
+<img src="IIS-tabulky.drawio.svg">
 
 <h2>Instalace</h2>
 
 Stručně popište: 
 <ul>
-<li>postup instalace na server,</li>
-<li>softwarové požadavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<li>Zkopírovat repozitář</li>
+<li>PHP v8.2.12, composer v2.6.5, laravel 10.x </li>
+<li><code>composer install</code> - pro instalaci balíčků</li>
+<li><code>php artisan migrate</code> - pro instalaci zmigrování tabulek</li>
+<li><code>php artisan db:seed</code> - pro vložení testovacích dat</li>
+<li>případně <code>php artisan serve</code> - pro lokální spuštění serveru</li>
 </ul>
 
 <h2>Známé problémy</h2>

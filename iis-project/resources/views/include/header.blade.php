@@ -25,7 +25,7 @@
 			<a class="nav-link {{ Request::is('profile') ? 'active' : '' }}" href="{{ route('profile') }}">Profil</a>
 		</li>
 		<li class="nav-item">
-			<a class="btn btn-outline-primary" href="{{ route('logout') }}">Odhásit se</a>
+			<a class="btn btn-outline-primary" href="{{ route('logout') }}">Odhlásit se</a>
 		</li>
 	@else
 		<li class="nav-item">
