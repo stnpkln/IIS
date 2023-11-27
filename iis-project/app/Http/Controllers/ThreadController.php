@@ -50,7 +50,7 @@ class ThreadController extends Controller
             return redirect()->route('login');
         }
         $userId = $this->getUserId(session('user'));
-        $thread = ThreadModel::find($threadId)->first();
+        $thread = ThreadModel::where('id', $threadId)->first();
         $groupId = $thread->group_id;
         if ($thread === null ||
             ($thread->user_id !== $userId &&

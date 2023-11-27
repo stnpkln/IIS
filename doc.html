@@ -1,0 +1,87 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>Sociální síť</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Petr Bromnik <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xbromn00@stud.fit.vutbr.cz">xbromn00tud.fit.vutbr.cz</a> -
+		Analýza, návrh, implementace (Laravel, PHP, HTML, bootstrap)
+	</dd>
+	<dd>David Skřeček <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xskrec00@stud.fit.vutbr.cz">xskrec00@stud.fit.vutbr.cz</a> - 
+		Analýza, návrh, práce s databází (migrace, seedy, modely), Nasazování aplikace, testování
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xskrec00/">http://www.stud.fit.vutbr.cz/~xskrec00/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<p>Výběr z uživatelů, je možné přidat registrací další. Přihlašuje se emailem, až na admina mají všichni heslo: <b>heslo123</b></p>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@test.cz</td><td>youShallNotPassword</td><td>Administrátor</td></tr>
+<tr><td>xbromn00@test.cz</td><td>heslo123</td><td>vlastník skupiny VUT FIT</td></tr>
+<tr><td>xskrec00@test.cz</td><td>heslo123</td><td>člen skupiny VUT FIT</td></tr>
+</table>
+
+<h3>Video</h3>
+<p><a href="https://drive.google.com/file/d/1Go7jMxSZdrPqkYj6R9eSnQD9JPeQd1w0/view?usp=sharing">Demonstrační video</a></p>
+
+<h2>Implementace</h2>
+<p>Každý route je zpracováván příslušnou funkcí některého z kontrolerů</p>
+<p>Funkce kontrolerů pak používají modely a views. Na views byly použity blade templates, stylování bylo primárně za použití bootstrapu</p>
+<p><b>HomepageController</b> - má pouze jedinou funkci. Pokud je uživatel přihlášen, je přesměrován na jeho skupiny. Jinak se mu zobrazí stránka, kde je přivítán a vyzván k přihlášení, pokud chce používat rozšířené funkcionality.</p>
+<p>
+	<b>UserController</b> - stará se o funkcionalitu která se týká uživatelů (přihlášní, registrace, odhlášení, zobrazování uživatelů a jejich správa)
+	Přihlašování a registrace je řešena přes PHP funkce (password_verify a password_hash), nikoliv přes nativní funkce Laravelu.
+</p>
+<p>
+	<b>GroupController</b> - stará se o funkcionality týkající se skupin (zobrazování, vytváření, editace, mazání, přidávání a odebírání uživatelů)
+</p>
+<p>
+	<b>ThreadController</b> - stará se o funkcionality týkající se vláken (zobrazování, vytváření, mazání)
+</p>
+<p>
+	<b>PostController</b> - stará se o funkcionality týkající se příspěvků (zobrazování, vytváření, editace, mazání, rating)
+</p>
+<h3>Databáze</h3>
+
+<img src="IIS-tabulky.drawio.svg">
+
+<h2>Instalace</h2>
+
+Stručně popište: 
+<ul>
+<li>Zkopírovat repozitář</li>
+<li>PHP v8.2.12, composer v2.6.5, laravel 10.x </li>
+<li><code>composer install</code> - pro instalaci balíčků</li>
+<li><code>cp .env.example .env</code> - pro vytvoření konfiguračního souboru</li>
+<li>upravit .env soubor - připojení k databázi</li>
+<li><code>php artisan key:generate</code> - pro vygenerování klíče</li>
+<li><code>php artisan migrate</code> - pro zmigrování tabulek</li>
+<li><code>php artisan db:seed</code> - pro vložení testovacích dat</li>
+<li>případně <code>php artisan serve</code> - pro lokální spuštění serveru</li>
+</ul>
+
+<h2>Známé problémy</h2>
+<p>Načítání dat z databáze není optimalizované (některá zpracování jsou pomalejší - např. označování příspěvků které uživatel již hodnotil) a data se načítají celá najednou - není omezeno načítání 10 příspěvků, pak dalších 10... pokud by naše soc. síť měla velké množství dat, narazila by na problémy s rychlostí</p>
+
+</body>
+</html>
